@@ -12,6 +12,17 @@ class DoctorService {
       throw new Error('Ooops... Something went wrong!');
     }
   }
+
+  public async delete(id: string): Promise<number> {
+    try {
+      const { deletedCount: deleted } = await this.doctor.deleteOne({
+        _id: id,
+      });
+      return deleted;
+    } catch (_) {
+      throw new Error('Ooops... Something went wrong!');
+    }
+  }
 }
 
 export default DoctorService;

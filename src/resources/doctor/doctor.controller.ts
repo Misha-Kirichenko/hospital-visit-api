@@ -26,6 +26,8 @@ class DoctorController implements Controller {
       validateDoctor,
       this.create
     );
+
+    this.router.delete(`${this.path}/:id`, this.delete);
   }
 
   private create = async (
@@ -36,6 +38,20 @@ class DoctorController implements Controller {
     try {
       const doctor = await this.doctorService.create(req.body);
       return res.status(201).json(doctor);
+    } catch (error) {
+      const errMsg = error as Error;
+      next(new HttpException(400, errMsg.message));
+    }
+  };
+
+  private delete = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {
+        params: { id },
+      } = req;
+      const deleted = await this.doctorService.delete(id);
+      if (deleted) return res.json({ success: true });
+      return res.status(404).json({ msg: 'doctor not found' });
     } catch (error) {
       const errMsg = error as Error;
       next(new HttpException(400, errMsg.message));

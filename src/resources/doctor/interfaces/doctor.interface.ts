@@ -6,4 +6,5 @@ export interface Doctor extends Document {
   readonly idCardNumber: string;
   readonly phoneNumber: string;
   readonly specialization: string;
+  readonly grade: string;
 }

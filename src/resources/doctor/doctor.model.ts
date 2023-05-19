@@ -31,7 +31,12 @@ const DoctorSchema = new Schema(
     },
     specialization: {
       type: String,
+      required: true,
       minlength: 2,
+    },
+    grade: {
+      type: String,
+      minlength: 3,
       required: true,
     },
   },

@@ -1,4 +1,4 @@
-import Paging from '@/utils/interfaces/paging.interface';
+import { Paging } from '@/utils/interfaces';
 
 export interface Query extends Paging {
   readonly specialization?: string;

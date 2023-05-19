@@ -21,7 +21,7 @@ class DoctorService {
       const pageChunk = (limit || this.defaultLimit) * (page - 1);
       const doctors = await this.doctor
         .find(queryObj)
-        .sort({ name: 1 })
+        .sort({ name: 1, surname: 1 })
         .skip(pageChunk)
         .limit(Number(Number(limit) || this.defaultLimit));
       return doctors;
@@ -45,6 +45,20 @@ class DoctorService {
         _id: id,
       });
       return deleted;
+    } catch (_) {
+      throw new Error('Ooops... Something went wrong!');
+    }
+  }
+
+  public async update(id: string, body: any): Promise<number> {
+    try {
+      const { matchedCount: updated } = await this.doctor.updateOne(
+        {
+          _id: id,
+        },
+        body
+      );
+      return updated;
     } catch (_) {
       throw new Error('Ooops... Something went wrong!');
     }

@@ -3,6 +3,11 @@ export const onlyAlphabetSymbols = (initialString: string): boolean => {
   return initialString ? regex.test(initialString) : false;
 };
 
+export const validSpecialization = (specialization: string): boolean => {
+  const regex = new RegExp(/^[a-z\-]{6,}$/i);
+  return specialization ? regex.test(specialization) : false;
+};
+
 export const validIdCard = (cardNumber: string): boolean => {
   const regex = new RegExp(/^[0-9]{11}$/);
   return regex.test(cardNumber);

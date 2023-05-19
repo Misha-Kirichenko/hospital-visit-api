@@ -3,7 +3,7 @@ import Controller from '@/utils/interfaces/controller.interface';
 import HttpException from '@/utils/exceptions/http.exception';
 import DoctorService from '@/resources/doctor/doctor.service';
 import validateDoctor from '@/resources/doctor/doctor.validation';
-import Doctor from '@/resources/doctor/doctor.interface';
+import { Doctor, Query } from '@/resources/doctor/interfaces';
 import schema from '@/resources/doctor/doctor.schema';
 import SchemaMiddleWare from '@/middleware/schema.middleware';
 
@@ -20,6 +20,8 @@ class DoctorController implements Controller {
   }
 
   private initialiseRoutes(): void {
+    this.router.get(this.path, this.getList);
+
     this.router.post(
       this.path,
       this.schemaMiddleWare.validateSchema,
@@ -29,6 +31,20 @@ class DoctorController implements Controller {
 
     this.router.delete(`${this.path}/:id`, this.delete);
   }
+
+  private getList = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response<Doctor[]> | void> => {
+    try {
+      const doctors = await this.doctorService.getList(req.query);
+      return res.json(doctors);
+    } catch (error) {
+      const errMsg = error as Error;
+      next(new HttpException(400, errMsg.message));
+    }
+  };
 
   private create = async (
     req: Request,
@@ -44,7 +60,11 @@ class DoctorController implements Controller {
     }
   };
 
-  private delete = async (req: Request, res: Response, next: NextFunction) => {
+  private delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response<{ success: boolean }> | { msg: string } | void> => {
     try {
       const {
         params: { id },

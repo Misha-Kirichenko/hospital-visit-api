@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import Doctor from '@/resources/doctor/doctor.interface';
+import { Doctor } from '@/resources/doctor/interfaces';
 
 const DoctorSchema = new Schema(
   {
@@ -27,7 +27,7 @@ const DoctorSchema = new Schema(
       type: String,
       required: true,
       minlength: 12,
-      maxlength: 12
+      maxlength: 12,
     },
     specialization: {
       type: String,

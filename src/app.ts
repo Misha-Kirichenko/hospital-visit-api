@@ -3,21 +3,25 @@ import mongoose from 'mongoose';
 import compression from 'compression';
 import cors from 'cors';
 import morgan from 'morgan';
-import Controller from '@/utils/interfaces/controller.interface';
-import errorMiddleware from '@/middleware/error.middleware';
+import {Controller} from '@/utils/interfaces/controller.interface';
 import helmet from 'helmet';
+import errorMiddleware from '@/middleware/error.middleware';
 
 class App {
   public express: Application;
-  public port: number;
+  private port: number;
 
   constructor(controllers: Controller[], port: number) {
     this.express = express();
     this.port = port;
-    // this.initializeDatabaseConnection();
+    this.initializeDatabaseConnection();
     this.inititalizeMiddleWare();
     this.initializeControllers(controllers);
-    this.initializeErrorHandling();
+    this.initialiseErrorHandling();
+  }
+
+  private initialiseErrorHandling(): void {
+    this.express.use(errorMiddleware);
   }
 
   private inititalizeMiddleWare(): void {
@@ -39,13 +43,9 @@ class App {
     });
   }
 
-  private initializeErrorHandling(): void {
-    this.express.use(errorMiddleware);
-  }
-
-  private initializeDatabaseConnection() {
+  private initializeDatabaseConnection(): void {
     const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
-    mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`);
+    mongoose.connect(`mongodb://${MONGO_PATH}`);
   }
 
   public listen(): void {

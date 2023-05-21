@@ -5,6 +5,7 @@ import DoctorService from '@/resources/doctor/doctor.service';
 import { Doctor } from '@/resources/doctor/interfaces';
 import { createDoctorDto, updateDoctorDto } from '@/resources/doctor/dto';
 import ValidationMiddleWare from '@/middleware/validation.middleware';
+import AuthMiddleware from '@/middleware/auth.middleware';
 
 class DoctorController implements Controller {
   public router: Router;
@@ -20,22 +21,36 @@ class DoctorController implements Controller {
     const createMiddleware = new ValidationMiddleWare(createDoctorDto);
     const updateMiddleware = new ValidationMiddleWare(updateDoctorDto);
     //get doctors list
-    this.router.get(this.path, this.getList);
+    this.router.get(
+      this.path,
+      AuthMiddleware.verifyToken,
+      AuthMiddleware.checkAccessRights('r'),
+      this.getList
+    );
 
     //create doctor
     this.router.post(
       this.path,
+      AuthMiddleware.verifyToken,
+      AuthMiddleware.checkAccessRights('w'),
       createMiddleware.checkAllowedAndRequired,
       createMiddleware.validate,
       this.create
     );
 
     //delete doctor by id
-    this.router.delete(`${this.path}/:id`, this.delete);
+    this.router.delete(
+      `${this.path}/:id`,
+      AuthMiddleware.verifyToken,
+      AuthMiddleware.checkAccessRights('d'),
+      this.delete
+    );
 
     // //update doctor by id
     this.router.patch(
       `${this.path}/:id`,
+      AuthMiddleware.verifyToken,
+      AuthMiddleware.checkAccessRights('w'),
       updateMiddleware.checkAllowedAndRequired,
       updateMiddleware.validate,
       this.update

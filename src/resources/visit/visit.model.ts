@@ -1,46 +1,44 @@
 import { Schema, model } from 'mongoose';
-import { DoctorDocument } from './interfaces/doctorDocument';
+import { VisitDocument } from './interfaces';
 
-const DoctorSchema = new Schema(
+const VisitSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
       minlength: 2,
-      maxlength: 50,
     },
     surname: {
       type: String,
       required: true,
       minlength: 2,
-      maxlength: 50,
+    },
+    date: {
+      type: Date,
+      required: true,
     },
     idCardNumber: {
-      unique: true,
       type: String,
       required: true,
       minlength: 11,
       maxlength: 11,
     },
     phoneNumber: {
-      unique: true,
       type: String,
-      required: true,
       minlength: 12,
       maxlength: 12,
     },
-    specialization: {
-      type: String,
+    doctor: {
+      type: Schema.Types.Mixed,
       required: true,
-      minlength: 2,
     },
-    grade: {
+    complaints: {
       type: String,
-      minlength: 3,
       required: true,
+      minlength: 10,
     },
   },
-  { timestamps: false, versionKey: false }
+  { timestamps: true, versionKey: false }
 );
 
-export default model<DoctorDocument>('Doctor', DoctorSchema);
+export default model<VisitDocument>('Visit', VisitSchema);

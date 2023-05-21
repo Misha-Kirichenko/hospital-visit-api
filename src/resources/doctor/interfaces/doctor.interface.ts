@@ -1,10 +1,8 @@
-import { Document } from 'mongoose';
-
-export interface Doctor extends Document {
-  readonly name: string;
-  readonly surname: string;
-  readonly idCardNumber: string;
-  readonly phoneNumber: string;
-  readonly specialization: string;
-  readonly grade: string;
+export interface Doctor {
+  name: string;
+  surname: string;
+  idCardNumber: string;
+  phoneNumber: string;
+  specialization: string;
+  grade: string;
 }

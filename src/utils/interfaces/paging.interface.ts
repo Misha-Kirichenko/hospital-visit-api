@@ -1,4 +1,4 @@
 export interface Paging {
-  page?: number;
-  limit?: number;
+  readonly page?: number;
+  readonly limit?: number;
 }

@@ -1,3 +1,3 @@
 export interface Dto {
-  [key: string]: { required?: boolean; msg: string; validator: Function };
+  readonly [key: string]: { required?: boolean; msg: string; validator: Function };
 }

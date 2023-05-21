@@ -9,7 +9,7 @@ class AdminService {
   private generateToken(tokenParams: {
     id: string;
     email: string;
-    previlegies: string[];
+    accessRights: string[];
   }) {
     const token = jwt.sign(tokenParams, `${process.env.TOKEY_KEY}`, {
       expiresIn: '24h',
@@ -32,8 +32,8 @@ class AdminService {
       );
 
       if (passwordsMatch) {
-        const { _id: id, email, previlegies } = foundAccount;
-        const token = this.generateToken({ id, email, previlegies });
+        const { _id: id, email, accessRights } = foundAccount;
+        const token = this.generateToken({ id, email, accessRights });
         return { token };
       }
 

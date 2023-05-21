@@ -12,13 +12,8 @@ const AdminSchema = new Schema(
       type: String,
       required: true,
     },
-    previlegies: {
-      type: [
-        {
-          type: String,
-          enum: ['r', 'w'],
-        },
-      ],
+    accessRights: {
+      type: Array,
       required: true,
     },
   },

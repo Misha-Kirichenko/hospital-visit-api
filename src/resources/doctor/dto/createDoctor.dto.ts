@@ -3,7 +3,7 @@ import {
   validIdCard,
   validPhoneNumber,
   validSpecialization,
-} from '@/common/validations';
+} from '@/utils/functions';
 import { errMsg } from '@/common/constants';
 
 const {

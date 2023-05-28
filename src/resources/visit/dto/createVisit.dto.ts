@@ -5,7 +5,7 @@ import {
   validMongoObjectId,
   validPhoneNumber,
   validText,
-} from '@/common/validations';
+} from '@/utils/functions';
 import { errMsg } from '@/common/constants';
 
 const {

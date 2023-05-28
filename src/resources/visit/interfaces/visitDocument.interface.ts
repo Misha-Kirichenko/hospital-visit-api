@@ -9,4 +9,6 @@ export interface VisitDocument extends Document {
   phoneNumber: string;
   doctor: Doctor;
   complaints: string;
+  createdAt: Date,
+  updatedAt: Date
 }

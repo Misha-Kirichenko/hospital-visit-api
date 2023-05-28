@@ -9,3 +9,6 @@ export const errMsg = {
   invalidDate: `Invalid date`,
   invalidText: `Invalid complaints text. Only alphabet characters and puctuation marks allowed`,
 };
+
+export const timeOffSet = 4;
+export const visitTime = 45 * 60 * 1000;

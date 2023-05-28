@@ -4,7 +4,7 @@ import validateEnv from '@/utils/validateEnv';
 import App from './app';
 import DoctorController from '@/resources/doctor/doctor.controller';
 import AdminController from '@/resources/admin/admin.controller';
-import VisitController from './resources/visit/visit.controller';
+import VisitController from '@/resources/visit/visit.controller';
 
 validateEnv();
 

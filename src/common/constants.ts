@@ -1,4 +1,4 @@
-export const errMsg = {
+export const errMsg: { [key: string]: string } = {
   invalidName: `name can only contain Latin letters and must be at least 2 characters long`,
   invalidSurname: `surname can only contain Latin letters and must be at least 2 characters long`,
   invalidSpecialization: `specialization can only contain: Latin letters and '-' sign. And must be at least 6 characters long`,
@@ -10,5 +10,7 @@ export const errMsg = {
   invalidText: `Invalid complaints text. Only alphabet characters and puctuation marks allowed`,
 };
 
-export const timeOffSet = 4;
-export const visitTime = 45 * 60 * 1000;
+export const timeOffSet: number = 4;
+export const visitTime: number = 45 * 60 * 1000;
+export const startHour: number = 10;
+export const offHour: number = 18;

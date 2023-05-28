@@ -7,3 +7,8 @@ export const getDateTimeWithOffset = (
   const dateTimeWithOffset = new Date(adjustedDateTime);
   return dateTimeWithOffset;
 };
+
+export const isWeekend = (date: Date): boolean => {
+  const day = date.getDay();
+  return day === 0 || day === 5;
+};

@@ -1,27 +1,48 @@
-import { timeOffSet, visitTime } from '@/common/constants';
+import { timeOffSet, visitTime, startHour, offHour } from '@/common/constants';
 import visitModel from './visit.model';
 import doctorModel from '@/resources/doctor/doctor.model';
 import { CreateVisit, Visit } from '@/resources/visit/types';
-import { getDateTimeWithOffset } from '@/utils/functions';
+import { getDateTimeWithOffset, isWeekend } from '@/utils/functions';
 import doctorVisitsModel from './doctorVisits.model';
 
 class VisitService {
   private visit = visitModel;
   private doctor = doctorModel;
   private doctorVisits = doctorVisitsModel;
-  public async create(visit: CreateVisit): Promise<Visit> {
+
+  public async create(visitDto: CreateVisit): Promise<Visit> {
     try {
-      const { doctorId, date } = visit;
+      const { doctorId } = visitDto;
+      const visitDate = new Date(visitDto.date);
+      const visitDayIsWeekend = isWeekend(visitDate);
+
+      if (visitDayIsWeekend) {
+        throw new Error('A visit cannot be scheduled for a weekend');
+      }
+
+      const validTime: boolean =
+        visitDate.getHours() >= startHour && visitDate.getHours() <= offHour;
+
+      if (!validTime) {
+        const message = `A visit cannot be scheduled earlier than ${startHour
+          .toString()
+          .padStart(2, '0')}:00 and later than ${offHour
+          .toString()
+          .padStart(2, '0')}:00`;
+
+        throw new Error(message);
+      }
+
       const foundDoctor = await this.doctor.findOne({ _id: doctorId });
 
       if (!foundDoctor) {
         throw new Error('Doctor was not found');
       }
 
-      const visitWithDoctor = { ...visit, doctor: foundDoctor };
+      const visitWithDoctor = { ...visitDto, doctor: foundDoctor };
 
-      const beforeVisit = new Date(date).getTime() - visitTime;
-      const afterVisit = new Date(date).getTime() + visitTime;
+      const beforeVisit = new Date(visitDto.date).getTime() - visitTime;
+      const afterVisit = new Date(visitDto.date).getTime() + visitTime;
 
       const visitReserved = await this.doctorVisits.findOne({
         $and: [

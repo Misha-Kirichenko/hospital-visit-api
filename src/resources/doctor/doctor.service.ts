@@ -1,8 +1,11 @@
 import { Doctor, Query } from '@/resources/doctor/interfaces';
 import DoctorModel from '@/resources/doctor/doctor.model';
+import VisitModel from '@/resources/visit/visit.model';
+import { ObjectId } from 'mongodb';
 
 class DoctorService {
   private doctor = DoctorModel;
+  private visit = VisitModel;
   private defaultLimit = 10;
   public async getList(query: Query): Promise<Doctor[]> {
     try {
@@ -50,7 +53,7 @@ class DoctorService {
     }
   }
 
-  public async update(id: string, body: any): Promise<number> {
+  public async update(id: string, body: Doctor): Promise<number> {
     try {
       const { matchedCount: updated } = await this.doctor.updateOne(
         {
@@ -58,6 +61,19 @@ class DoctorService {
         },
         body
       );
+
+      const updateRelated: { [key: string]: string | undefined } = {};
+      for (const prop in body) {
+        updateRelated[`doctor.${prop}`] = body[prop as keyof Doctor];
+      }
+
+      await this.visit.updateMany(
+        {
+          'doctor._id': new ObjectId(id),
+        },
+        updateRelated
+      );
+
       return updated;
     } catch (_) {
       throw new Error('Ooops... Something went wrong!');

@@ -1,13 +1,13 @@
-import { timeOffSet, visitTime, startHour, offHour } from '@/common/constants';
-import visitModel from './visit.model';
-import doctorModel from '@/resources/doctor/doctor.model';
+import { TIME_OFFSET, VISIT_TIME, START_HOUR, OFF_HOUR } from '@/common/constants';
+import VisitModel from './visit.model';
+import DoctorModel from '@/resources/doctor/doctor.model';
 import { CreateVisit, Visit } from '@/resources/visit/types';
-import { getDateTimeWithOffset, isWeekend } from '@/utils/functions';
+import { getDateTimeWithOffset, hoursDiff, isWeekend } from '@/utils/functions';
 import doctorVisitsModel from './doctorVisits.model';
 
 class VisitService {
-  private visit = visitModel;
-  private doctor = doctorModel;
+  private visit = VisitModel;
+  private doctor = DoctorModel;
   private doctorVisits = doctorVisitsModel;
 
   public async create(visitDto: CreateVisit): Promise<Visit> {
@@ -16,17 +16,25 @@ class VisitService {
       const visitDate = new Date(visitDto.date);
       const visitDayIsWeekend = isWeekend(visitDate);
 
+      if (new Date() > visitDate) {
+        throw new Error('A visit cannot be scheduled in the past');
+      }
+
+      if(hoursDiff(new Date(), visitDate) < 2) {
+        throw new Error('A visit must be scheduled at least 2 hours earlier');
+      }
+
       if (visitDayIsWeekend) {
         throw new Error('A visit cannot be scheduled for a weekend');
       }
 
       const validTime: boolean =
-        visitDate.getHours() >= startHour && visitDate.getHours() <= offHour;
+        visitDate.getHours() >= START_HOUR && visitDate.getHours() <= OFF_HOUR;
 
       if (!validTime) {
-        const message = `A visit cannot be scheduled earlier than ${startHour
+        const message = `A visit cannot be scheduled earlier than ${START_HOUR
           .toString()
-          .padStart(2, '0')}:00 and later than ${offHour
+          .padStart(2, '0')}:00 and later than ${OFF_HOUR
           .toString()
           .padStart(2, '0')}:00`;
 
@@ -41,8 +49,8 @@ class VisitService {
 
       const visitWithDoctor = { ...visitDto, doctor: foundDoctor };
 
-      const beforeVisit = new Date(visitDto.date).getTime() - visitTime;
-      const afterVisit = new Date(visitDto.date).getTime() + visitTime;
+      const beforeVisit = new Date(visitDto.date).getTime() - VISIT_TIME;
+      const afterVisit = new Date(visitDto.date).getTime() + VISIT_TIME;
 
       const visitReserved = await this.doctorVisits.findOne({
         $and: [
@@ -63,15 +71,15 @@ class VisitService {
         { upsert: true }
       );
 
-      newVisit.date = getDateTimeWithOffset(timeOffSet, newVisit.date);
+      newVisit.date = getDateTimeWithOffset(TIME_OFFSET, newVisit.date);
 
       newVisit.createdAt = getDateTimeWithOffset(
-        timeOffSet,
+        TIME_OFFSET,
         newVisit.createdAt
       );
 
       newVisit.updatedAt = getDateTimeWithOffset(
-        timeOffSet,
+        TIME_OFFSET,
         newVisit.updatedAt
       );
 

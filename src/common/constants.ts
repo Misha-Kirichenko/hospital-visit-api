@@ -10,7 +10,7 @@ export const errMsg: { [key: string]: string } = {
   invalidText: `Invalid complaints text. Only alphabet characters and puctuation marks allowed`,
 };
 
-export const timeOffSet: number = 4;
-export const visitTime: number = 45 * 60 * 1000;
-export const startHour: number = 10;
-export const offHour: number = 18;
+export const TIME_OFFSET: number = 4;
+export const VISIT_TIME: number = 45 * 60 * 1000;
+export const START_HOUR: number = 10;
+export const OFF_HOUR: number = 18;

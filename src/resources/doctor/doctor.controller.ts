@@ -89,14 +89,14 @@ class DoctorController implements Controller {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<Response<{ success: boolean }> | { msg: string } | void> => {
+  ): Promise<Response<{ success: boolean }> | { message: string } | void> => {
     try {
       const {
         params: { id },
       } = req;
       const deleted = await this.doctorService.delete(id);
       if (deleted) return res.json({ success: true });
-      return res.status(404).json({ msg: 'doctor not found' });
+      return res.status(404).json({ message: 'doctor not found' });
     } catch (error) {
       const errMsg = error as Error;
       next(new HttpException(400, errMsg.message));
@@ -107,7 +107,7 @@ class DoctorController implements Controller {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<Response<{ success: boolean }> | { msg: string } | void> => {
+  ): Promise<Response<{ success: boolean }> | { message: string } | void> => {
     try {
       const {
         params: { id },
@@ -115,7 +115,7 @@ class DoctorController implements Controller {
       } = req;
       const updated = await this.doctorService.update(id, body);
       if (updated) return res.json({ success: true });
-      return res.status(404).json({ msg: 'doctor not found' });
+      return res.status(404).json({ message: 'doctor not found' });
     } catch (error) {
       const errMsg = error as Error;
       next(new HttpException(400, errMsg.message));
